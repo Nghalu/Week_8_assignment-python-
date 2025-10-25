@@ -2,32 +2,29 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-# Load the dataset
-df = pd.read_csv('metadata.csv',low_memory=False)
-# Display the first few rows of the dataset
+#load dataset
+df = pd.read_csv('metadata.csv')
+#understand dataset
 print(df.head())
-print(df.shape)
 print(df.info())
-# Check for missing values
-missing_values = df.isnull().sum()
-print("Missing values in each column:\n", missing_values)
-# Summary statistics of numerical columns
 print(df.describe())
-# Summary statistics of categorical columns
-print(df.describe(include=['object']))
-# Visualize the distribution of a numerical column
-plt.figure(figsize=(10, 6)) 
-plt.hist(df['who_covidence_id'].dropna(), bins=30, color='blue', alpha=0.7)
-plt.title('who_covidence Distribution')
-plt.xlabel('who_covidence_id')
+print(df.shape)
+#check for missing values
+print(df.isnull().sum())
+import missingno as msno # type: ignore
+msno.bar(df)
+plt.show()
+#Data transformation
+df['pub_year'] = df['pub_year'].astype(int)
+df['title_length'] = df['title'].apply(len)
+#Exploratory Data Analysis
+plt.figure(figsize=(10,6))
+sns.histplot(df['pub_year'], bins=30, kde=True)
+plt.title('Publication Year Distribution')
+plt.xlabel('Publication Year')
 plt.ylabel('Frequency')
 plt.show()
 
-df['year'] = pd.to_datetime(df['publish_time']).dt.year
-year_counts = df['year'].value_counts().sort_index()
-plt.bar(year_counts.index, year_counts.values)
-plt.title('Publications by Year')
-plt.show()
 
 
 
